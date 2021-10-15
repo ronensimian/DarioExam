@@ -1,0 +1,157 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
+
+namespace DarioExam
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IWebDriver driver = new ChromeDriver(chromeDriverPath);
+
+            try
+            {
+                driver.Navigate().GoToUrl(url1);
+                driver.Manage().Window.Maximize();
+                Thread.Sleep(1000);
+                // Answer 1
+                driver.FindElement(By.ClassName("new-todo")).SendKeys("Write");
+                driver.FindElement(By.ClassName("new-todo")).SendKeys(Keys.Enter);
+                driver.FindElement(By.ClassName("new-todo")).SendKeys("Read");
+                driver.FindElement(By.ClassName("new-todo")).SendKeys(Keys.Enter);
+
+                // Answer 2
+                var count = driver.FindElement(By.ClassName("todo-count"));
+                countItems = Convert.ToInt32(SplitStringBySeperator(count.Text, " ")[0]);
+                if (countItems == 2)
+                {
+                    Console.WriteLine("2 items in ToDo list - PASS");
+                }
+                else if (countItems > 2)
+                {
+                    Console.WriteLine("Too much items in ToDo list - FAIL");
+                }
+                else
+                {
+                    Console.WriteLine("Not enough items in ToDo list - FAIL");
+                }
+
+                // Answer 3
+                IList<IWebElement> links = driver.FindElements(By.TagName("a"));
+                links.First(link => link.Text.ToLower() == "completed").Click();
+                countItems = driver.FindElements(By.ClassName("view")).Count();
+                if (countItems == 0)
+                {
+                    Console.WriteLine("No items in completed ToDo list - PASS");
+                }
+                else
+                {
+                    Console.WriteLine("There is at least one item in completed ToDo list - FAIL");
+                }
+
+                // Answer 4
+                driver.Navigate().Back();
+                driver.FindElement(By.ClassName("toggle")).Click(); // get first element
+
+                // Answer 5
+                count = driver.FindElement(By.ClassName("todo-count"));
+                countItems = Convert.ToInt32(SplitStringBySeperator(count.Text, " ")[0]);
+                if (countItems == 1)
+                {
+                    Console.WriteLine("1 item in ToDo list - PASS");
+                }
+                else
+                {
+                    Console.WriteLine("ToDo list has more or less then 1 item - FAIL");
+                }
+
+                // Answer 6
+                links.First(link => link.Text.ToLower() == "completed").Click();
+                countItems = driver.FindElements(By.ClassName("view")).Count();
+                if (countItems == 1)
+                {
+                    Console.WriteLine("One item in completed ToDo list - PASS");
+                }
+                else
+                {
+                    Console.WriteLine("Other then one item in completed ToDo list - FAIL");
+                }
+
+                // Answer 7
+                driver.FindElement(By.ClassName("clear-completed")).Click();
+                countItems = driver.FindElements(By.ClassName("view")).Count();
+                if (countItems == 0)
+                {
+                    Console.WriteLine("No items in completed ToDo list - PASS");
+                }
+                else
+                {
+                    Console.WriteLine("There is at least one item in completed ToDo list - FAIL");
+                }
+
+
+                // Answer 8 + 9
+                driver.Navigate().GoToUrl(url2);
+                Thread.Sleep(3000);
+                var ActionsInSheet = driver.FindElement(By.XPath("//meta[@property='og:description']")).GetAttribute("content");
+                string[] eachAction = SplitStringBySeperator(ActionsInSheet, "\r\n");
+                for (int i = 0; i < eachAction.Length; i++)
+                {
+                    if (eachAction[i].Contains("1,") || eachAction[i].Contains("3,") || eachAction[i].Contains("5,"))
+                    {
+                        getActions = getActions.Concat(new string[] { SplitStringBySeperator(eachAction[i], ",")[1] }).ToArray();
+                    }
+                }
+                driver.Navigate().GoToUrl(url1);
+                for (int i = 0; i < getActions.Length; i++)
+                {
+                    driver.FindElement(By.ClassName("new-todo")).SendKeys(getActions[i]);
+                    driver.FindElement(By.ClassName("new-todo")).SendKeys(Keys.Enter);
+                }
+
+                // Answer 10
+                countItems = driver.FindElements(By.ClassName("view")).Count();
+                Console.WriteLine("There are " + countItems.ToString() + " items in ToDo list");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                driver.Quit();
+            }
+
+        }
+
+        #region Functions
+
+        protected static string[] SplitStringBySeperator(string Str, string Seperator)
+        {
+            string[] Seperators = new string[2];
+            Seperators[0] = Seperator;
+            Seperators[1] = "";
+            string[] sArray = Str.Split(Seperators, StringSplitOptions.None);
+
+            return sArray;
+        }
+
+        #endregion Functions
+
+        #region Variables
+
+        public static string url1 = "https://todomvc.com/examples/react/#/";
+        public static string url2 = "https://docs.google.com/spreadsheets/d/1qP0tqFFjWWki-3L7_Va49UWg5vU2LvxrrGesv1r7kXw/edit#gid=0"; // Bonus url
+        public static string chromeDriverPath = "E:/Downloads_E/chromedriver_93";
+        public static int countItems;
+        public static string[] getActions = new string[] { };
+        #endregion Variables
+    }
+}

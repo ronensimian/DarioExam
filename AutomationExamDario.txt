@@ -1,0 +1,45 @@
+Automation Exam  - Dario
+ 
+
+Required: 
+
+Selenium 
+Feel free to implement the coding task with your preferred language: Java or C# 
+Please perform this exam in 60  min in max. 
+
+Exam: 
+Use this site address: https://todomvc.com/examples/react/#/  
+And write  an automation test/scenarios for the following: 
+
+1. Add 2 new missions with the name: “Write” & “Read” 
+
+2. Verify that in the left corner you see “items l 2 ” 
+
+3. Go to “completed” tab and see that they are not appearing 
+
+4. Go back to “all” and choose 1 of them(in the check box) 
+
+5. Verify that now you see “1 item left” 
+
+6. Go to the completed tab and verify that the item display 
+
+7. Click the “clear  completed” button and verify the item disappear 
+
+ 
+Bonus questions: 
+
+8. Use the following file: https://docs.google.com/spreadsheets/d/1qP0tqFFjWWki-3L7_Va49UWg5vU2LvxrrGesv1r7kXw/edit#gid=0 
+
+9. Add actions 1,3,& 5 to the “todos” list from the external file 
+
+10. Print how much items we have now in the “todos” list (using your own script and not the “X items left”) 
+
+ 
+
+At the end please send the code to shmuel.bam@uprightpose.com with your full name 
+(Please send it as a zip file) + please include instructions (README) on how to use it. 
+Thanks! 
+
+ 
+
+ 
